@@ -18,13 +18,14 @@
 #define BLINK_TASK_PRIORITY     ( tskIDLE_PRIORITY + 2UL )
 #define MAIN_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 #define BLINK_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
-
+int count = 0;
+bool on = false;
 void blink_task(__unused void *params) {    //blinking the LED
     hard_assert(cyw43_arch_init() == PICO_OK);
     while (true) {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on); // command to toggle LED
         // question: is this when count is non-0 or equal to one
-        toggle();
+        toggle(count, on);
         vTaskDelay(500);
     }
 }
@@ -50,16 +51,4 @@ int main( void )
     return 0;
 }
 
-char switchCase(char c){
-    if (c <= 'z' && c >= 'a') 
-        return (c - 32);
-    else if (c >= 'A' && c <= 'Z') 
-        return (c + 32);
-    else
-        return c;
-}
 
-bool toggle(){
-    if (count++ % 11) on = !on;
-    return on;
-}
