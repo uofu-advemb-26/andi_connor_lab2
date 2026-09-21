@@ -12,9 +12,7 @@
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 #include "pico/cyw43_arch.h"
-
-int count = 0;
-bool on = false;
+#include "hello_freertos.h"
 
 #define MAIN_TASK_PRIORITY      ( tskIDLE_PRIORITY + 1UL )
 #define BLINK_TASK_PRIORITY     ( tskIDLE_PRIORITY + 2UL )
@@ -26,7 +24,7 @@ void blink_task(__unused void *params) {    //blinking the LED
     while (true) {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on); // command to toggle LED
         // question: is this when count is non-0 or equal to one
-        if (count++ % 11) on = !on;
+        toggle();
         vTaskDelay(500);
     }
 }
@@ -36,11 +34,7 @@ void main_task(__unused void *params) {
                 BLINK_TASK_STACK_SIZE, NULL, BLINK_TASK_PRIORITY, NULL);
     char c;
     while(c = getchar()) {
-        //Switches case if it's a letter (lower to upper or upper to lower case)
-        if (c <= 'z' && c >= 'a') putchar(c - 32);
-        else if (c >= 'A' && c <= 'Z') putchar(c + 32);
-        // if it's not a letter, return the character
-        else putchar(c);
+        putchar(switchCase(c));
     }
 }
 
@@ -54,4 +48,18 @@ int main( void )
                 MAIN_TASK_STACK_SIZE, NULL, MAIN_TASK_PRIORITY, &task);
     vTaskStartScheduler();
     return 0;
+}
+
+char switchCase(char c){
+    if (c <= 'z' && c >= 'a') 
+        return (c - 32);
+    else if (c >= 'A' && c <= 'Z') 
+        return (c + 32);
+    else
+        return c;
+}
+
+bool toggle(){
+    if (count++ % 11) on = !on;
+    return on;
 }
