@@ -30,7 +30,7 @@ elseif(DEFINED ENV{UNITY_PATH})
     set(UNITY_PATH $ENV{UNITY_PATH})
 else()
 # Default to the submodule
-    set(UNITY_PATH lib/unity)
+    set(UNITY_PATH lib/Unity)
 endif()
 
 if(DEFINED ENV{OPENOCD_PATH})

@@ -52,7 +52,7 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         # Make sure to set the correct elf file
-        run: cmake --build ./build --target openocd_test
+        run: cmake --build ./build --target openocd_char_led_test
         # run: openocd -s $OPENOCD_PATH -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c 'adapter speed 5000; program "mytest.elf" verify reset exit'
       - name: Test
         working-directory: ${{github.workspace}}
